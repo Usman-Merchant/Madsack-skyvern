@@ -53,9 +53,42 @@ if not any(
         settings.ENABLE_BEDROCK,
         settings.ENABLE_GEMINI,
         settings.ENABLE_NOVITA,
+        settings.ENABLE_DEEPSEEK,  # ✅ Added DeepSeek here
     ]
 ):
     raise NoProviderEnabledError()
+
+
+if settings.ENABLE_DEEPSEEK:
+        LLMConfigRegistry.register_config(
+            "DEEPSEEK_CHAT",
+            LLMConfig(
+                "deepseek/deepseek-chat",
+                ["DEEPSEEK_API_KEY"],
+                supports_vision=False,
+                add_assistant_prefix=False,
+                litellm_params=LiteLLMParams(
+                    api_base="https://api.deepseek.com/v1",
+                    api_key=settings.DEEPSEEK_API_KEY,
+                    model_info={"model_name": "deepseek/deepseek-chat"},
+                ),
+            ),
+        )
+
+        LLMConfigRegistry.register_config(
+            "DEEPSEEK_CODER",
+            LLMConfig(
+                "deepseek/deepseek-coder",
+                ["DEEPSEEK_API_KEY"],
+                supports_vision=False,
+                add_assistant_prefix=False,
+                litellm_params=LiteLLMParams(
+                    api_base="https://api.deepseek.com/v1",
+                    api_key=settings.DEEPSEEK_API_KEY,
+                    model_info={"model_name": "deepseek/deepseek-coder"},
+                ),
+            ),
+        )
 
 
 if settings.ENABLE_OPENAI:
@@ -266,6 +299,7 @@ if settings.ENABLE_AZURE:
             add_assistant_prefix=False,
         ),
     )
+    
 
 if settings.ENABLE_AZURE_GPT4O_MINI:
     LLMConfigRegistry.register_config(
